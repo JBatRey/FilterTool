@@ -228,7 +228,19 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
 
 def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
 
-    w, h3 = signal.freqs(b, a, np.logspace(1, 3, 1000))
+    if filter_type == 'lowpass':       
+        logsp =  np.logspace(np.log10(0.01*Wpass), np.log10(100*Watt), 1000)
+        w, h3 = signal.freqs(b, a, logsp)
+    if filter_type == 'highpass':
+        logsp =  np.logspace(np.log10(0.01*Watt), np.log10(100*Wpass), 1000)
+        w, h3 = signal.freqs(b, a, logsp)
+    if filter_type == 'bandpass':
+        logsp =  np.logspace(np.log10(0.01*Watt[0]), np.log10(100*Watt[1]), 1000)
+        w, h3 = signal.freqs(b, a, logsp)
+    if filter_type == 'bandstop':
+        logsp =  np.logspace(np.log10(0.01*Wpass[0]), np.log10(100*Wpass[1]), 1000)
+        w, h3 = signal.freqs(b, a, logsp)
+
     plt.semilogx(w, 20 * np.log10(abs(h3)), label="den 50%")
 
     plt.title(
@@ -259,6 +271,7 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
         plt.fill(
             [Watt, 100 * Watt, 100 * Watt, Watt], [0, 0, Ga, Ga], "0.9", lw=0
         )  # zona prohibida: sobre Ga
+        plt.axis([Wpass*0.1, Watt*10, Ga - 10, 10])
 
     if filter_type == "highpass":
         plt.fill(
@@ -276,6 +289,7 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
             "0.9",
             lw=0,
         )  # zona prohibida: sobre Ga
+        plt.axis([Watt*0.1, Wpass*10, Ga - 10, 10])
 
     if filter_type == "bandpass":
         plt.fill(
@@ -299,6 +313,8 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
             "0.9",
             lw=0,
         )  # zona prohibida: sobre Ga
+        plt.axis([Watt[0]*0.1, Watt[1]*10, Ga - 10, 10])
+
 
     if filter_type == "bandstop":
         plt.fill(
@@ -319,16 +335,31 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
         plt.fill(
             [Watt[0], Watt[0], Watt[1], Watt[1]], [0, Ga, Ga, 0], "0.9", lw=0
         )  # zona prohibida: bajo Gp
+        plt.axis([Wpass[0]*0.1, Wpass[1]*10, Ga - 10, 10])
 
     # stop
-    plt.axis([10, 1000, Ga - 10, 10])
+    
     plt.legend()
     plt.show()
 
 
 def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
 
-    w, h3 = signal.freqs(b, a, np.logspace(1, 3, 1000))
+    
+    if filter_type == 'lowpass':       
+        logsp =  np.logspace(np.log10(0.01*Wpass), np.log10(100*Watt), 1000)
+        w, h3 = signal.freqs(b, a, logsp)
+    if filter_type == 'highpass':
+        logsp =  np.logspace(np.log10(0.01*Watt), np.log10(100*Wpass), 1000)
+        w, h3 = signal.freqs(b, a, logsp)
+    if filter_type == 'bandpass':
+        logsp =  np.logspace(np.log10(0.01*Watt[0]), np.log10(100*Watt[1]), 1000)
+        w, h3 = signal.freqs(b, a, logsp)
+    if filter_type == 'bandstop':
+        logsp =  np.logspace(np.log10(0.01*Wpass[0]), np.log10(100*Wpass[1]), 1000)
+        w, h3 = signal.freqs(b, a, logsp)
+    
+    
 
     Gp *= -1
     Ga *= -1
@@ -363,6 +394,7 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
         plt.fill(
             [Watt, 100 * Watt, 100 * Watt, Watt], [0, 0, Ga, Ga], "0.9", lw=0
         )  # zona prohibida: sobre Ga
+        plt.axis([Wpass*0.1, Watt*10, -10, Ga + 10])
 
     if filter_type == "highpass":
         plt.fill(
@@ -380,6 +412,7 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
             "0.9",
             lw=0,
         )  # zona prohibida: sobre Ga
+        plt.axis([Watt*0.1, Wpass*10, -10, Ga + 10])
 
     if filter_type == "bandpass":
         plt.fill(
@@ -403,6 +436,7 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
             "0.9",
             lw=0,
         )  # zona prohibida: sobre Ga
+        plt.axis([Watt[0]*0.1, Watt[1]*10, -10, Ga + 10])
 
     if filter_type == "bandstop":
         plt.fill(
@@ -423,9 +457,10 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
         plt.fill(
             [Watt[0], Watt[0], Watt[1], Watt[1]], [0, Ga, Ga, 0], "0.9", lw=0
         )  # zona prohibida: bajo Gp
+        plt.axis([Wpass[0]*0.1, Wpass[1]*10, -10, Ga + 10])
 
     # stop
-    plt.axis([10, 1000, -10, Ga + 10])
+    
     plt.legend()
     plt.show()
     return
