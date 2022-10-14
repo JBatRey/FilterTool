@@ -530,7 +530,7 @@ def zplane(z, p, filename=None):
         markersize=10.0,
         markeredgewidth=1.0,
         markeredgecolor="k",
-        markerfacecolor="g",
+        markerfacecolor="b",
     )
 
     # Plot the poles and set marker properties
@@ -549,6 +549,10 @@ def zplane(z, p, filename=None):
     ax.spines["top"].set_visible(False)
     ax.set_aspect("equal")
     ax.set_adjustable("datalim")
+    ax.set_xlabel("Real", loc='right')
+    ax.set_ylabel("Imaginary") 
+    plt.setp( ax.xaxis.get_majorticklabels(), rotation=-45, ha="left" ) 
+    ax.grid(which="both", axis="both")
 
     # set the ticks
     # r = 1.5; plt.axis('scaled'); plt.axis([-r, r, -r, r])
