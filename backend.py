@@ -96,14 +96,14 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
             lambda x: getMagnAtWx(N, [Wn0[0], x], Wpass[1]) - (Gp), [WpB2, WpB1], 0.01
         )
 
-        Wn0.append(var)
+        Wn0 = Wn
     elif filter_type == "bandstop":
         Wn0 = []
 
         W1 = Wn[0]
         W2 = Wn[1]
 
-        if abs(Wpass[1] - Watt[1]) > abs(Wpass[0] - Watt[0]):
+        if np.log10(Watt[1] / Wpass[1]) > np.log10(Wpass[0] / Watt[0]):
 
             var = scipy.optimize.minimize_scalar(
                 lambda delta: (
@@ -142,22 +142,22 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
         W1 = Wn[0]
         W2 = Wn[1]
 
-        if abs(Wpass[1] - Watt[1]) > abs(Wpass[0] - Watt[0]):
+        if abs(np.log10(Watt[1] / Wpass[1])) > abs(np.log10(Wpass[0] / Watt[0])):
 
             var = scipy.optimize.minimize_scalar(
                 lambda delta: (
-                    abs(getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Watt[0]) - Ga)
+                    abs(getMagnAtWx(N, [Wn[0] + delta, Wn[1] - delta], Watt[0]) - Ga)
                 ),
             )
         else:
 
             var = scipy.optimize.minimize_scalar(
                 lambda delta: (
-                    abs(getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Watt[1]) - Ga)
+                    abs(getMagnAtWx(N, [Wn[0] + delta, Wn[1] - delta], Watt[1]) - Ga)
                 ),
             )
 
-        Wn100 = [Wn[0] - var.x, Wn[0] + var.x]
+        Wn100 = [Wn[0] + var.x, Wn[1] - var.x]
 
     elif filter_type == "bandstop":
         Wn100 = []

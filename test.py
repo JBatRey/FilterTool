@@ -41,12 +41,12 @@ deg = 0.5
 """
 
 filter = "cheby2"
-filter_type = "bandstop"
-Wpass = [2 * np.pi * (37e3 - 5e3), 2 * np.pi * (37e3 + 5e3)]
-Watt = [2 * np.pi * (37e3 - 300), 2 * np.pi * (37e3 + 300)]
+filter_type = "bandpass"
+Watt = [2 * np.pi * (37e3 - 8e3), 2 * np.pi * (37e3 + 8e3)]
+Wpass = [2 * np.pi * (37e3 - 2000), 2 * np.pi * (37e3 + 2000)]
 Gp = -6
 Ga = -50
-den = 0
+den = 1
 
 order, Wn = get_min_order(filter, Wpass, Watt, -Gp, -Ga)
 
