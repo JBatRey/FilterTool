@@ -1,3 +1,4 @@
+from ctypes import sizeof
 from msilib import type_string
 from scipy import signal
 import scipy
@@ -7,6 +8,7 @@ from metodosnum import bisection
 from matplotlib import patches
 from matplotlib.figure import Figure
 from matplotlib import rcParams
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def get_min_order(filter_name, Wpass, Watt, Gp, Ga):
@@ -98,48 +100,27 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
     elif filter_type == "bandstop":
         Wn0 = []
 
-        WpA1 = Wn[0]
-        WpA2 = Wn[0]
-        while getMagnAtWx(N, [WpA1, Wn[1]], Wpass[0]) > Gp:
-            WpA1 *= 0.99
-        while getMagnAtWx(N, [WpA2, Wn[1]], Wpass[0]) < Gp:
-            WpA2 *= 1.005
+        W1 = Wn[0]
+        W2 = Wn[1]
 
-        Wn0.append(
-            bisection(
-                lambda x: getMagnAtWx(N, [x, Wn[1]], Wpass[0]) - (Gp),
-                [WpA1, WpA2],
-                0.001,
+        if abs(Wpass[1] - Watt[1]) > abs(Wpass[0] - Watt[0]):
+
+            var = scipy.optimize.minimize_scalar(
+                lambda delta: (
+                    (getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Wpass[0]) - Gp)
+                ),
+                bounds=(Wn[0] * 0.9, Wn[0] * 1.1),
             )
-        )
+        else:
 
-        valA = getMagnAtWx(N, [Wn0[0], Wn[1]], Wpass[0])
+            var = scipy.optimize.minimize_scalar(
+                lambda delta: (
+                    (getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Wpass[1]) - Gp)
+                ),
+                bounds=(Wn[1] * 0.9, Wn[1] * 1.1),
+            )
 
-        WpB1 = Wn[1]
-        WpB2 = Wn[1]
-        while getMagnAtWx(N, [Wn0[0], WpB1], Wpass[1]) > Gp:
-            WpB1 *= 1.01
-        while getMagnAtWx(N, [Wn0[0], WpB2], Wpass[1]) < Gp:
-            WpB2 *= 0.995
-
-        var = bisection(
-            lambda x: getMagnAtWx(N, [Wn0[0], x], Wpass[1]) - (Gp), [WpB2, WpB1], 0.001
-        )
-
-        Wn0.append(var)
-
-        WpA1 = Wn[0]
-        WpA2 = Wn[0]
-        while getMagnAtWx(N, [WpA1, Wn0[1]], Wpass[0]) > Gp:
-            WpA1 *= 0.99
-        while getMagnAtWx(N, [WpA2, Wn0[1]], Wpass[0]) < Gp:
-            WpA2 *= 1.005
-
-        Wn0[0] = bisection(
-            lambda x: getMagnAtWx(N, [x, Wn0[1]], Wpass[0]) - (Gp),
-            [WpA1, WpA2],
-            0.001,
-        )
+        Wn0 = [Wn[0] - var.x, Wn[0] + var.x]
 
     if filter_type == "lowpass":
         Wa1 = Wn
@@ -159,37 +140,29 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
         )
     elif filter_type == "bandpass":
         Wn100 = []
-        WaA1 = Wn[0]
-        WaA2 = Wn[0]
-        while getMagnAtWx(N, [WaA1, Wn[1]], Watt[0]) < Ga:
-            WaA1 *= 0.99
-        while getMagnAtWx(N, [WaA1, Wn[1]], Watt[0]) > Ga:
-            WaA1 *= 1.005
 
-        magA1 = getMagnAtWx(N, [WaA1, Wn[1]], Watt[0])
-        magA2 = getMagnAtWx(N, [WaA2, Wn[1]], Watt[0])
+        W1 = Wn[0]
+        W2 = Wn[1]
 
-        Wn100.append(
-            1.01
-            * bisection(
-                lambda x: getMagnAtWx(N, [x, Wn[1]], Watt[0]) - (Ga), [WaA1, WaA2], 0.01
+        if abs(Wpass[1] - Watt[1]) > abs(Wpass[0] - Watt[0]):
+
+            var = scipy.optimize.minimize_scalar(
+                lambda delta: (
+                    (getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Watt[0]) - Ga)
+                ),
+                bounds=(Wn[0] * 0.9, Wn[0] * 1.1),
             )
-        )
+        else:
 
-        WaB1 = Wn[1]
-        while getMagnAtWx(N, [Wn100[0], WaB1], Watt[1]) < Ga:
-            val = getMagnAtWx(N, [Wn100[0], WaB1], Watt[1])
-            WaB1 *= 1.01
-        WaB2 = Wn[1] * 0.98
+            var = scipy.optimize.minimize_scalar(
+                lambda delta: (
+                    (getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Watt[1]) - Ga)
+                ),
+                bounds=(Wn[1] * 0.9, Wn[1] * 1.1),
+            )
 
-        magB1 = getMagnAtWx(N, [Wn100[0], WaB1], Watt[1])
-        magB2 = getMagnAtWx(N, [Wn100[0], WaB2], Watt[1])
+        Wn100 = [Wn[0] - var.x, Wn[0] + var.x]
 
-        var = 0.99 * bisection(
-            lambda x: getMagnAtWx(N, [Wn100[0], x], Watt[1]) - (Ga), [WaB2, WaB1], 0.01
-        )
-
-        Wn100.append(var)
     elif filter_type == "bandstop":
         Wn100 = []
         WaA1 = Wn[0]
@@ -250,9 +223,8 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
     else:
         Wden = Wn0 ** (1 - denorm) * Wn100 ** (denorm)
 
-    b3, a3 = filterfunc(N, Wden, filter_type, True)
-    val1 = getMagnAtWx(N, Wden, Wpass[0])
-    val2 = getMagnAtWx(N, [Wden[0], Wn[1]], Wpass[0])
+    b3, a3 = filterfunc(N, Wn, filter_type, True)
+    # val1 = getMagnAtWx(N, Wden, Wpass[0])
 
     # b4, a4 = filterfunc(N, Wn0, filter_type, True)
     # w, h4 = signal.freqs(b4, a4, np.logspace(1, 3, 1000))
@@ -516,6 +488,7 @@ def return_p_z(b, a):
     poles = [[abs(x), -x.real / abs(x)] for x in p]
 
     print("poles:")
+    print(len(poles))
     for element in poles:
         xi = element[1]
         if xi < 1e-15:
@@ -528,6 +501,7 @@ def return_p_z(b, a):
     zeros = [[abs(x), -x.real / abs(x)] for x in z]
 
     print("zeros:")
+    print(len(zeros))
     for element in zeros:
         xi = element[1]
         if xi < 1e-15:

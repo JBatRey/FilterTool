@@ -46,11 +46,11 @@ Wpass = [2 * np.pi * (37e3 - 5e3), 2 * np.pi * (37e3 + 5e3)]
 Watt = [2 * np.pi * (37e3 - 300), 2 * np.pi * (37e3 + 300)]
 Gp = -6
 Ga = -50
-den = 0
+den = 0.5
 
 order, Wn = get_min_order(filter, Wpass, Watt, -Gp, -Ga)
 
-b, a = get_filter(filter, filter_type, order, Wn, Wpass, Watt, Gp, Ga, den)
+b, a = get_filter(filter, filter_type, order + 1, Wn, Wpass, Watt, Gp, Ga, den)
 return_p_z(b, a)
 
 """Hay que elegir entre el grafico d etoda la vida, o de atenuación (al revés)
