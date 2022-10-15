@@ -107,20 +107,18 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
 
             var = scipy.optimize.minimize_scalar(
                 lambda delta: (
-                    (getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Wpass[0]) - Gp)
-                ),
-                bounds=(Wn[0] * 0.9, Wn[0] * 1.1),
+                    abs((getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Wpass[0]) - Gp))
+                )
             )
         else:
 
             var = scipy.optimize.minimize_scalar(
                 lambda delta: (
-                    (getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Wpass[1]) - Gp)
-                ),
-                bounds=(Wn[1] * 0.9, Wn[1] * 1.1),
+                    abs((getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Wpass[1]) - Gp))
+                )
             )
-
-        Wn0 = [Wn[0] - var.x, Wn[0] + var.x]
+        gain = getMagnAtWx(N, [Wn[0] - var.x, Wn[1] + var.x], Wpass[1])
+        Wn0 = [Wn[0] - var.x, Wn[1] + var.x]
 
     if filter_type == "lowpass":
         Wa1 = Wn
@@ -148,17 +146,15 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
 
             var = scipy.optimize.minimize_scalar(
                 lambda delta: (
-                    (getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Watt[0]) - Ga)
+                    abs(getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Watt[0]) - Ga)
                 ),
-                bounds=(Wn[0] * 0.9, Wn[0] * 1.1),
             )
         else:
 
             var = scipy.optimize.minimize_scalar(
                 lambda delta: (
-                    (getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Watt[1]) - Ga)
+                    abs(getMagnAtWx(N, [Wn[0] - delta, Wn[1] + delta], Watt[1]) - Ga)
                 ),
-                bounds=(Wn[1] * 0.9, Wn[1] * 1.1),
             )
 
         Wn100 = [Wn[0] - var.x, Wn[0] + var.x]
@@ -223,7 +219,7 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
     else:
         Wden = Wn0 ** (1 - denorm) * Wn100 ** (denorm)
 
-    b3, a3 = filterfunc(N, Wn, filter_type, True)
+    b3, a3 = filterfunc(N, Wden, filter_type, True)
     # val1 = getMagnAtWx(N, Wden, Wpass[0])
 
     # b4, a4 = filterfunc(N, Wn0, filter_type, True)
