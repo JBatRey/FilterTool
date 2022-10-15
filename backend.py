@@ -103,7 +103,7 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
         W1 = Wn[0]
         W2 = Wn[1]
 
-        if np.log10(Watt[1] / Wpass[1]) > np.log10(Wpass[0] / Watt[0]):
+        if np.log10(Wpass[1] / Watt[1]) > np.log10(Watt[0] / Wpass[0]):
 
             var = scipy.optimize.minimize_scalar(
                 lambda delta: (
@@ -511,6 +511,9 @@ def return_p_z(b, a):
             Q = np.inf
 
         print("wo=" + str(element[0]) + "; xi= " + str(xi) + "; Q= " + str(Q))
+
+    print("sos")
+    print(signal.tf2sos(b, a))
 
     return poles, zeros
 
