@@ -46,7 +46,7 @@ Wpass = [2 * np.pi * (37e3 - 5e3), 2 * np.pi * (37e3 + 5e3)]
 Watt = [2 * np.pi * (37e3 - 300), 2 * np.pi * (37e3 + 300)]
 Gp = -6
 Ga = -50
-den = 0.5
+den = 0
 
 order, Wn = get_min_order(filter, Wpass, Watt, -Gp, -Ga)
 
