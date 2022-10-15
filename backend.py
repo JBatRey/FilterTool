@@ -97,38 +97,53 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
         Wn0.append(var)
     elif filter_type == "bandstop":
         Wn0 = []
-        WaA1 = Wn[0]
-        while getMagnAtWx(N, [WaA1, Wn[1]], Wpass[0]) > Gp:
-            WaA1 *= 0.99
-        WpA2 = Wn[0] * 1.02
+
+        WpA1 = Wn[0]
+        WpA2 = Wn[0]
+        while getMagnAtWx(N, [WpA1, Wn[1]], Wpass[0]) > Gp:
+            WpA1 *= 0.99
+        while getMagnAtWx(N, [WpA2, Wn[1]], Wpass[0]) < Gp:
+            WpA2 *= 1.005
+
         Wn0.append(
-            1.01
-            * bisection(
+            bisection(
                 lambda x: getMagnAtWx(N, [x, Wn[1]], Wpass[0]) - (Gp),
-                [WaA1, WpA2],
-                0.01,
+                [WpA1, WpA2],
+                0.001,
             )
         )
 
+        valA = getMagnAtWx(N, [Wn0[0], Wn[1]], Wpass[0])
+
         WpB1 = Wn[1]
-        gabatB1 = getMagnAtWx(N, [Wn0[0], WpB1], Wpass[1])
+        WpB2 = Wn[1]
         while getMagnAtWx(N, [Wn0[0], WpB1], Wpass[1]) > Gp:
             WpB1 *= 1.01
-        WpB2 = Wn[1] * 0.98
+        while getMagnAtWx(N, [Wn0[0], WpB2], Wpass[1]) < Gp:
+            WpB2 *= 0.995
 
-        magB1 = getMagnAtWx(N, [Wn0[0], WpB1], Wpass[1])
-        magB2 = getMagnAtWx(N, [Wn0[0], WpB2], Wpass[1])
-
-        var = 0.99 * bisection(
-            lambda x: getMagnAtWx(N, [Wn0[0], x], Wpass[1]) - (Gp), [WpB2, WpB1], 0.01
+        var = bisection(
+            lambda x: getMagnAtWx(N, [Wn0[0], x], Wpass[1]) - (Gp), [WpB2, WpB1], 0.001
         )
 
         Wn0.append(var)
 
+        WpA1 = Wn[0]
+        WpA2 = Wn[0]
+        while getMagnAtWx(N, [WpA1, Wn0[1]], Wpass[0]) > Gp:
+            WpA1 *= 0.99
+        while getMagnAtWx(N, [WpA2, Wn0[1]], Wpass[0]) < Gp:
+            WpA2 *= 1.005
+
+        Wn0[0] = bisection(
+            lambda x: getMagnAtWx(N, [x, Wn0[1]], Wpass[0]) - (Gp),
+            [WpA1, WpA2],
+            0.001,
+        )
+
     if filter_type == "lowpass":
         Wa1 = Wn
         while getMagnAtWx(N, Wa1, Watt) < Ga:
-            gan = getMagnAtWx(N, Wa1, Watt)
             Wa1 *= 1.01
         Wa2 = Wn * 0.98
         Wn100 = 0.99 * bisection(
@@ -145,9 +160,11 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
     elif filter_type == "bandpass":
         Wn100 = []
         WaA1 = Wn[0]
+        WaA2 = Wn[0]
         while getMagnAtWx(N, [WaA1, Wn[1]], Watt[0]) < Ga:
             WaA1 *= 0.99
-        WaA2 = Wn[0] * 1.02
+        while getMagnAtWx(N, [WaA1, Wn[1]], Watt[0]) > Ga:
+            WaA1 *= 1.005
 
         magA1 = getMagnAtWx(N, [WaA1, Wn[1]], Watt[0])
         magA2 = getMagnAtWx(N, [WaA2, Wn[1]], Watt[0])
@@ -176,34 +193,52 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
     elif filter_type == "bandstop":
         Wn100 = []
         WaA1 = Wn[0]
+        WaA2 = Wn[0]
         while getMagnAtWx(N, [WaA1, Wn[1]], Watt[0]) < Ga:
             WaA1 *= 1.01
-        WaA2 = Wn[0] * 0.98
+        while getMagnAtWx(N, [WaA2, Wn[1]], Watt[0]) > Ga:
+            WaA2 *= 0.995
 
         magA1 = getMagnAtWx(N, [WaA1, Wn[1]], Watt[0])
         magA2 = getMagnAtWx(N, [WaA2, Wn[1]], Watt[0])
 
         Wn100.append(
-            1.01
-            * bisection(
-                lambda x: getMagnAtWx(N, [x, Wn[1]], Watt[0]) - (Ga), [WaA1, WaA2], 0.01
+            bisection(
+                lambda x: getMagnAtWx(N, [x, Wn[1]], Watt[0]) - (Ga),
+                [WaA1, WaA2],
+                0.001,
             )
         )
 
         WaB1 = Wn[1]
+        WaB2 = Wn[1]
         while getMagnAtWx(N, [Wn100[0], WaB1], Watt[1]) < Ga:
-            val = getMagnAtWx(N, [Wn100[0], WaB1], Watt[1])
             WaB1 *= 0.99
-        WaB2 = Wn[1] * 1.02
+        while getMagnAtWx(N, [Wn100[0], WaB2], Watt[1]) > Ga:
+            WaB1 *= 1.005
 
         magB1 = getMagnAtWx(N, [Wn100[0], WaB1], Watt[1])
         magB2 = getMagnAtWx(N, [Wn100[0], WaB2], Watt[1])
 
-        var = 0.99 * bisection(
-            lambda x: getMagnAtWx(N, [Wn100[0], x], Watt[1]) - (Ga), [WaB2, WaB1], 0.01
+        var = bisection(
+            lambda x: getMagnAtWx(N, [Wn100[0], x], Watt[1]) - (Ga), [WaB2, WaB1], 0.001
         )
 
         Wn100.append(var)
+
+        while getMagnAtWx(N, [WaA1, Wn[1]], Watt[0]) < Ga:
+            WaA1 *= 1.01
+        while getMagnAtWx(N, [WaA2, Wn[1]], Watt[0]) > Ga:
+            WaA2 *= 0.995
+
+        magA1 = getMagnAtWx(N, [WaA1, Wn[1]], Watt[0])
+        magA2 = getMagnAtWx(N, [WaA2, Wn[1]], Watt[0])
+
+        Wn100[0] = bisection(
+            lambda x: getMagnAtWx(N, [x, Wn[1]], Watt[0]) - (Ga),
+            [WaA1, WaA2],
+            0.001,
+        )
 
     # b2, a2 = filterfunc(N, Wn100, filter_type, True)
     # w, h2 = signal.freqs(b2, a2, np.logspace(1, 3, 1000))
@@ -211,11 +246,13 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
     if filter_type == "bandpass" or filter_type == "bandstop":
         Wden = [0, 0]
         for index, element in enumerate(Wden):
-            Wden[index] = Wn0[index] ** (denorm) * Wn100[index] ** (1 - denorm)
+            Wden[index] = Wn0[index] ** (1 - denorm) * Wn100[index] ** (denorm)
     else:
-        Wden = Wn0 ** (denorm) * Wn100 ** (1 - denorm)
+        Wden = Wn0 ** (1 - denorm) * Wn100 ** (denorm)
 
     b3, a3 = filterfunc(N, Wden, filter_type, True)
+    val1 = getMagnAtWx(N, Wden, Wpass[0])
+    val2 = getMagnAtWx(N, [Wden[0], Wn[1]], Wpass[0])
 
     # b4, a4 = filterfunc(N, Wn0, filter_type, True)
     # w, h4 = signal.freqs(b4, a4, np.logspace(1, 3, 1000))
@@ -228,17 +265,17 @@ def get_filter(filter_name, filter_type, N, Wn, Wpass, Watt, Gp, Ga, denorm):
 
 def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
 
-    if filter_type == 'lowpass':       
-        logsp =  np.logspace(np.log10(0.01*Wpass), np.log10(100*Watt), 1000)
+    if filter_type == "lowpass":
+        logsp = np.logspace(np.log10(0.01 * Wpass), np.log10(100 * Watt), 10000)
         w, h3 = signal.freqs(b, a, logsp)
-    if filter_type == 'highpass':
-        logsp =  np.logspace(np.log10(0.01*Watt), np.log10(100*Wpass), 1000)
+    if filter_type == "highpass":
+        logsp = np.logspace(np.log10(0.01 * Watt), np.log10(100 * Wpass), 10000)
         w, h3 = signal.freqs(b, a, logsp)
-    if filter_type == 'bandpass':
-        logsp =  np.logspace(np.log10(0.01*Watt[0]), np.log10(100*Watt[1]), 1000)
+    if filter_type == "bandpass":
+        logsp = np.logspace(np.log10(0.01 * Watt[0]), np.log10(100 * Watt[1]), 10000)
         w, h3 = signal.freqs(b, a, logsp)
-    if filter_type == 'bandstop':
-        logsp =  np.logspace(np.log10(0.01*Wpass[0]), np.log10(100*Wpass[1]), 1000)
+    if filter_type == "bandstop":
+        logsp = np.logspace(np.log10(0.01 * Wpass[0]), np.log10(100 * Wpass[1]), 10000)
         w, h3 = signal.freqs(b, a, logsp)
 
     plt.semilogx(w, 20 * np.log10(abs(h3)), label="den 50%")
@@ -271,7 +308,7 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
         plt.fill(
             [Watt, 100 * Watt, 100 * Watt, Watt], [0, 0, Ga, Ga], "0.9", lw=0
         )  # zona prohibida: sobre Ga
-        plt.axis([Wpass*0.1, Watt*10, Ga - 10, 10])
+        plt.axis([Wpass * 0.1, Watt * 10, Ga - 10, 10])
 
     if filter_type == "highpass":
         plt.fill(
@@ -289,7 +326,7 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
             "0.9",
             lw=0,
         )  # zona prohibida: sobre Ga
-        plt.axis([Watt*0.1, Wpass*10, Ga - 10, 10])
+        plt.axis([Watt * 0.1, Wpass * 10, Ga - 10, 10])
 
     if filter_type == "bandpass":
         plt.fill(
@@ -313,8 +350,7 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
             "0.9",
             lw=0,
         )  # zona prohibida: sobre Ga
-        plt.axis([Watt[0]*0.1, Watt[1]*10, Ga - 10, 10])
-
+        plt.axis([Watt[0] * 0.1, Watt[1] * 10, Ga - 10, 10])
 
     if filter_type == "bandstop":
         plt.fill(
@@ -335,31 +371,28 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
         plt.fill(
             [Watt[0], Watt[0], Watt[1], Watt[1]], [0, Ga, Ga, 0], "0.9", lw=0
         )  # zona prohibida: bajo Gp
-        plt.axis([Wpass[0]*0.1, Wpass[1]*10, Ga - 10, 10])
+        plt.axis([Wpass[0] * 0.1, Wpass[1] * 10, Ga - 10, 10])
 
     # stop
-    
+
     plt.legend()
     plt.show()
 
 
 def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
 
-    
-    if filter_type == 'lowpass':       
-        logsp =  np.logspace(np.log10(0.01*Wpass), np.log10(100*Watt), 1000)
+    if filter_type == "lowpass":
+        logsp = np.logspace(np.log10(0.01 * Wpass), np.log10(100 * Watt), 10000)
         w, h3 = signal.freqs(b, a, logsp)
-    if filter_type == 'highpass':
-        logsp =  np.logspace(np.log10(0.01*Watt), np.log10(100*Wpass), 1000)
+    if filter_type == "highpass":
+        logsp = np.logspace(np.log10(0.01 * Watt), np.log10(100 * Wpass), 10000)
         w, h3 = signal.freqs(b, a, logsp)
-    if filter_type == 'bandpass':
-        logsp =  np.logspace(np.log10(0.01*Watt[0]), np.log10(100*Watt[1]), 1000)
+    if filter_type == "bandpass":
+        logsp = np.logspace(np.log10(0.01 * Watt[0]), np.log10(100 * Watt[1]), 10000)
         w, h3 = signal.freqs(b, a, logsp)
-    if filter_type == 'bandstop':
-        logsp =  np.logspace(np.log10(0.01*Wpass[0]), np.log10(100*Wpass[1]), 1000)
+    if filter_type == "bandstop":
+        logsp = np.logspace(np.log10(0.01 * Wpass[0]), np.log10(100 * Wpass[1]), 10000)
         w, h3 = signal.freqs(b, a, logsp)
-    
-    
 
     Gp *= -1
     Ga *= -1
@@ -394,7 +427,7 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
         plt.fill(
             [Watt, 100 * Watt, 100 * Watt, Watt], [0, 0, Ga, Ga], "0.9", lw=0
         )  # zona prohibida: sobre Ga
-        plt.axis([Wpass*0.1, Watt*10, -10, Ga + 10])
+        plt.axis([Wpass * 0.1, Watt * 10, -10, Ga + 10])
 
     if filter_type == "highpass":
         plt.fill(
@@ -412,7 +445,7 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
             "0.9",
             lw=0,
         )  # zona prohibida: sobre Ga
-        plt.axis([Watt*0.1, Wpass*10, -10, Ga + 10])
+        plt.axis([Watt * 0.1, Wpass * 10, -10, Ga + 10])
 
     if filter_type == "bandpass":
         plt.fill(
@@ -436,7 +469,7 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
             "0.9",
             lw=0,
         )  # zona prohibida: sobre Ga
-        plt.axis([Watt[0]*0.1, Watt[1]*10, -10, Ga + 10])
+        plt.axis([Watt[0] * 0.1, Watt[1] * 10, -10, Ga + 10])
 
     if filter_type == "bandstop":
         plt.fill(
@@ -457,10 +490,10 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
         plt.fill(
             [Watt[0], Watt[0], Watt[1], Watt[1]], [0, Ga, Ga, 0], "0.9", lw=0
         )  # zona prohibida: bajo Gp
-        plt.axis([Wpass[0]*0.1, Wpass[1]*10, -10, Ga + 10])
+        plt.axis([Wpass[0] * 0.1, Wpass[1] * 10, -10, Ga + 10])
 
     # stop
-    
+
     plt.legend()
     plt.show()
     return
@@ -549,9 +582,9 @@ def zplane(z, p, filename=None):
     ax.spines["top"].set_visible(False)
     ax.set_aspect("equal")
     ax.set_adjustable("datalim")
-    ax.set_xlabel("Real", loc='right')
-    ax.set_ylabel("Imaginary") 
-    plt.setp( ax.xaxis.get_majorticklabels(), rotation=-45, ha="left" ) 
+    ax.set_xlabel("Real", loc="right")
+    ax.set_ylabel("Imaginary")
+    plt.setp(ax.xaxis.get_majorticklabels(), rotation=-45, ha="left")
     ax.grid(which="both", axis="both")
 
     # set the ticks
