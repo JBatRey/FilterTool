@@ -514,6 +514,8 @@ def return_p_z(b, a):
 
     print("sos")
     print(signal.tf2sos(b, a))
+    print("trnsf.")
+    print(b,a)
 
     return poles, zeros
 
