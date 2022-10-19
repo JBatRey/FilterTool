@@ -56,4 +56,6 @@ return_p_z(b, a)
 """Hay que elegir entre el grafico d etoda la vida, o de atenuación (al revés)
 los parametros son 'attenuation' y 'standard' """
 graph_filter("standard", filter, filter_type, order, Wpass, Watt, Gp, Ga, 0.5, b, a)
+graph_phase(filter_type, filter_type, order, Wpass, Watt, Gp, Ga, den, b, a)
+graph_group_delay(filter_type, filter_type, order, Wpass, Watt, Gp, Ga, den, b, a)
 print(signal.TransferFunction(b, a))

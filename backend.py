@@ -264,17 +264,17 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
         plt.fill(
             [0.01 * Wpass, 0.01 * Wpass, 100 * Watt, 100 * Watt],
             [0, 100 * (-Gp), 100 * (-Gp), 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: amplificación
         plt.fill(
             [0.01 * Wpass, 0.01 * Wpass, Wpass, Wpass],
             [100 * Gp, Gp, Gp, 100 * Gp],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: bajo Gp
         plt.fill(
-            [Watt, 100 * Watt, 100 * Watt, Watt], [0, 0, Ga, Ga], "0.9", lw=0
+            [Watt, 100 * Watt, 100 * Watt, Watt], [0, 0, Ga, Ga], "0.85", lw=0
         )  # zona prohibida: sobre Ga
         plt.axis([Wpass * 0.1, Watt * 10, Ga - 10, 10])
 
@@ -282,16 +282,16 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
         plt.fill(
             [0.01 * Wpass, 0.01 * Wpass, 100 * Watt, 100 * Watt],
             [0, 100 * (-Gp), 100 * (-Gp), 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: amplificación
         plt.fill(
-            [0.01 * Watt, 0.01 * Watt, Watt, Watt], [0, Ga, Ga, 0], "0.9", lw=0
+            [0.01 * Watt, 0.01 * Watt, Watt, Watt], [0, Ga, Ga, 0], "0.85", lw=0
         )  # zona prohibida: bajo Gp
         plt.fill(
             [Wpass, 100 * Wpass, 100 * Wpass, Wpass],
             [Gp, Gp, 100 * Gp, 100 * Gp],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: sobre Ga
         plt.axis([Watt * 0.1, Wpass * 10, Ga - 10, 10])
@@ -300,22 +300,22 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
         plt.fill(
             [1, 1, 100 * Watt[1], 100 * Watt[1]],
             [0, 100 * (-Gp), 100 * (-Gp), 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: amplificación
         plt.fill(
-            [1, 1, Watt[0], Watt[0]], [0, Ga, Ga, 0], "0.9", lw=0
+            [1, 1, Watt[0], Watt[0]], [0, Ga, Ga, 0], "0.85", lw=0
         )  # zona prohibida: bajo Gp
         plt.fill(
             [Watt[1], Watt[1], 100 * Watt[1], 100 * Watt[1]],
             [0, Ga, Ga, 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: bajo Gp
         plt.fill(
             [Wpass[0], Wpass[0], Wpass[1], Wpass[1]],
             [Gp, 100 * Gp, 100 * Gp, Gp],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: sobre Ga
         plt.axis([Watt[0] * 0.1, Watt[1] * 10, Ga - 10, 10])
@@ -324,20 +324,20 @@ def graph_standard(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, 
         plt.fill(
             [1, 1, 100 * Wpass[1], 100 * Wpass[1]],
             [0, 100 * (-Gp), 100 * (-Gp), 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: amplificación
         plt.fill(
-            [1, 1, Wpass[0], Wpass[0]], [Gp, 100 * Gp, 100 * Gp, Gp], "0.9", lw=0
+            [1, 1, Wpass[0], Wpass[0]], [Gp, 100 * Gp, 100 * Gp, Gp], "0.85", lw=0
         )  # zona prohibida: bajo Gp
         plt.fill(
             [Wpass[1], Wpass[1], 100 * Wpass[1], 100 * Wpass[1]],
             [Gp, 100 * Gp, 100 * Gp, Gp],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: bajo Gp
         plt.fill(
-            [Watt[0], Watt[0], Watt[1], Watt[1]], [0, Ga, Ga, 0], "0.9", lw=0
+            [Watt[0], Watt[0], Watt[1], Watt[1]], [0, Ga, Ga, 0], "0.85", lw=0
         )  # zona prohibida: bajo Gp
         plt.axis([Wpass[0] * 0.1, Wpass[1] * 10, Ga - 10, 10])
 
@@ -383,17 +383,17 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
         plt.fill(
             [0.01 * Wpass, 0.01 * Wpass, 100 * Watt, 100 * Watt],
             [0, 100 * (-Gp), 100 * (-Gp), 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: amplificación
         plt.fill(
             [0.01 * Wpass, 0.01 * Wpass, Wpass, Wpass],
             [100 * Gp, Gp, Gp, 100 * Gp],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: bajo Gp
         plt.fill(
-            [Watt, 100 * Watt, 100 * Watt, Watt], [0, 0, Ga, Ga], "0.9", lw=0
+            [Watt, 100 * Watt, 100 * Watt, Watt], [0, 0, Ga, Ga], "0.85", lw=0
         )  # zona prohibida: sobre Ga
         plt.axis([Wpass * 0.1, Watt * 10, -10, Ga + 10])
 
@@ -401,16 +401,16 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
         plt.fill(
             [0.01 * Wpass, 0.01 * Wpass, 100 * Watt, 100 * Watt],
             [0, 100 * (-Gp), 100 * (-Gp), 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: amplificación
         plt.fill(
-            [0.01 * Watt, 0.01 * Watt, Watt, Watt], [0, Ga, Ga, 0], "0.9", lw=0
+            [0.01 * Watt, 0.01 * Watt, Watt, Watt], [0, Ga, Ga, 0], "0.85", lw=0
         )  # zona prohibida: bajo Gp
         plt.fill(
             [Wpass, 100 * Wpass, 100 * Wpass, Wpass],
             [Gp, Gp, 100 * Gp, 100 * Gp],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: sobre Ga
         plt.axis([Watt * 0.1, Wpass * 10, -10, Ga + 10])
@@ -419,22 +419,22 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
         plt.fill(
             [1, 1, 100 * Watt[1], 100 * Watt[1]],
             [0, 100 * (-Gp), 100 * (-Gp), 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: amplificación
         plt.fill(
-            [1, 1, Watt[0], Watt[0]], [0, Ga, Ga, 0], "0.9", lw=0
+            [1, 1, Watt[0], Watt[0]], [0, Ga, Ga, 0], "0.85", lw=0
         )  # zona prohibida: bajo Gp
         plt.fill(
             [Watt[1], Watt[1], 100 * Watt[1], 100 * Watt[1]],
             [0, Ga, Ga, 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: bajo Gp
         plt.fill(
             [Wpass[0], Wpass[0], Wpass[1], Wpass[1]],
             [Gp, 100 * Gp, 100 * Gp, Gp],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: sobre Ga
         plt.axis([Watt[0] * 0.1, Watt[1] * 10, -10, Ga + 10])
@@ -443,20 +443,20 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
         plt.fill(
             [1, 1, 100 * Wpass[1], 100 * Wpass[1]],
             [0, 100 * (-Gp), 100 * (-Gp), 0],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: amplificación
         plt.fill(
-            [1, 1, Wpass[0], Wpass[0]], [Gp, 100 * Gp, 100 * Gp, Gp], "0.9", lw=0
+            [1, 1, Wpass[0], Wpass[0]], [Gp, 100 * Gp, 100 * Gp, Gp], "0.85", lw=0
         )  # zona prohibida: bajo Gp
         plt.fill(
             [Wpass[1], Wpass[1], 100 * Wpass[1], 100 * Wpass[1]],
             [Gp, 100 * Gp, 100 * Gp, Gp],
-            "0.9",
+            "0.85",
             lw=0,
         )  # zona prohibida: bajo Gp
         plt.fill(
-            [Watt[0], Watt[0], Watt[1], Watt[1]], [0, Ga, Ga, 0], "0.9", lw=0
+            [Watt[0], Watt[0], Watt[1], Watt[1]], [0, Ga, Ga, 0], "0.85", lw=0
         )  # zona prohibida: bajo Gp
         plt.axis([Wpass[0] * 0.1, Wpass[1] * 10, -10, Ga + 10])
 
@@ -467,6 +467,57 @@ def graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
     return
 
 
+def graph_phase(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
+    sys = signal.TransferFunction(b, a)
+    if filter_type == "lowpass":
+        logsp = np.logspace(np.log10(0.01 * Wpass), np.log10(100 * Watt), 10000)
+        w, mag, phase = signal.bode(sys, logsp)
+    if filter_type == "highpass":
+        logsp = np.logspace(np.log10(0.01 * Watt), np.log10(100 * Wpass), 10000)
+        w, mag, phase = signal.bode(sys, logsp)
+    if filter_type == "bandpass":
+        logsp = np.logspace(np.log10(0.01 * Watt[0]), np.log10(100 * Watt[1]), 10000)
+        w, mag, phase = signal.bode(sys, logsp)
+    if filter_type == "bandstop":
+        logsp = np.logspace(np.log10(0.01 * Wpass[0]), np.log10(100 * Wpass[1]), 10000)
+        w, mag, phase = signal.bode(sys, logsp)
+
+    plt.semilogx(w, phase, label="phase")
+    plt.legend()
+    plt.grid(which="both", axis="both")
+
+    plt.show()
+
+
+def graph_group_delay(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
+    sys = signal.TransferFunction(b, a)
+    if filter_type == "lowpass":
+        logsp = np.logspace(np.log10(0.01 * Wpass), np.log10(100 * Watt), 10000)
+        w, mag, phase = signal.bode(sys, logsp)
+    if filter_type == "highpass":
+        logsp = np.logspace(np.log10(0.01 * Watt), np.log10(100 * Wpass), 10000)
+        w, mag, phase = signal.bode(sys, logsp)
+    if filter_type == "bandpass":
+        logsp = np.logspace(np.log10(0.01 * Watt[0]), np.log10(100 * Watt[1]), 10000)
+        w, mag, phase = signal.bode(sys, logsp)
+    if filter_type == "bandstop":
+        logsp = np.logspace(np.log10(0.01 * Wpass[0]), np.log10(100 * Wpass[1]), 10000)
+        w, mag, phase = signal.bode(sys, logsp)
+
+    gd = np.zeros(len(w) - 1)
+    for i, element in enumerate(w):
+        if i > 0:
+            deltaW = w[i] - w[i - 1]
+            deltaPhase = phase[i] - phase[i - 1]
+            gd[i - 1] = deltaPhase / deltaW  
+
+    plt.semilogx(w[1:], gd, label="group delay")
+    plt.legend()
+    plt.grid(which="both", axis="both")
+
+    plt.show()
+
+
 def graph_filter(
     modality, filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a
 ):
@@ -475,6 +526,10 @@ def graph_filter(
     elif modality == "attenuation":
         graph_atte(filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a)
     return
+
+
+##def print_normalized(modality, filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a):
+##    graph_filter(modality, filter_name, filter_type, N, Wpass, Watt, Gp, Ga, denorm, b, a)
 
 
 def return_p_z(b, a):
@@ -515,7 +570,7 @@ def return_p_z(b, a):
     print("sos")
     print(signal.tf2sos(b, a))
     print("trnsf.")
-    print(b,a)
+    print(b, a)
 
     return poles, zeros
 
